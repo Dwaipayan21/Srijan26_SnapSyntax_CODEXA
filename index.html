@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Night Sky Watching Experience</title>
+    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!--Spaceship cursor-->
+    <div class="spaceship-cursor" alt="Spaceship">
+        <img src="assets/85-851213_spaceship-png-transparent.png">
+    </div>    
+    <!-- The tall container that creates the scrollable area -->
+    <div class="scroll-container"></div>
+    
+    <!-- Fixed viewport for cinematic framing -->
+    <div class="viewport">
+        
+        <!-- Background Sky Gradients -->
+        <div class="layer sky" id="sky-sunset"></div>
+        <div class="layer sky" id="sky-twilight"></div>
+        <div class="layer sky" id="sky-night"></div>
+        <div class="layer sky" id="sky-space"></div>
+        
+        <!-- Space background details (nebula/galaxies via CSS radial gradients) -->
+        <div class="layer space-bg" id="space-elements"></div>
+
+        <!-- The Sun -->
+        <div class="layer" id="sun-layer">
+            <div class="sun"></div>
+        </div>
+        
+        <!-- Canvas for Stars, Milky Way Particles, and Constellations -->
+        <canvas id="stars-canvas" class="layer"></canvas>
+        
+        <!-- Milky Way pure CSS visual layer (optional enhancement along with canvas) -->
+        <div class="layer milky-way" id="milky-way-css"></div>
+        
+        <!-- Landscape Parallax Layers (Mountains & Trees) -->
+        <div class="layer landscape" id="mountain-bg"></div>
+        <div class="layer landscape" id="mountain-mg"></div>
+        <div class="layer landscape" id="mountain-fg"></div>
+        
+        <!-- Silhouette of Stargazer and Telescope -->
+        <div class="layer stargazer-wrapper" id="stargazer">
+            <!-- Stargazer SVG Base -->
+            <svg class="stargazer-svg" viewBox="0 0 300 200" preserveAspectRatio="xMidYMax meet">
+                <!-- Ground -->
+                <path d="M0,200 L300,200 L300,180 Q150,150 0,190 Z" fill="#040b16"/>
+                <!-- Person Sitting -->
+                <path d="M80,185 C75,170 85,160 95,160 C105,160 110,170 105,185 Z" fill="#040b16"/>
+                <circle cx="95" cy="150" r="12" fill="#040b16"/>
+                <!-- Tripod Base -->
+                <line x1="145" y1="185" x2="135" y2="155" stroke="#040b16" stroke-width="4" stroke-linecap="round"/>
+                <line x1="145" y1="185" x2="155" y2="155" stroke="#040b16" stroke-width="4" stroke-linecap="round"/>
+                <line x1="145" y1="185" x2="145" y2="145" stroke="#040b16" stroke-width="6" stroke-linecap="round"/>
+            </svg>
+            <!-- Moving Telescope SVG -->
+            <svg class="telescope-svg" id="telescope-tube" viewBox="0 0 100 100">
+                <g transform="translate(50, 50)">
+                    <rect x="-10" y="-40" width="20" height="80" rx="3" fill="#040b16" />
+                    <rect x="-12" y="-42" width="24" height="15" rx="2" fill="#040b16" />
+                    <rect x="-6" y="40" width="12" height="10" fill="#040b16" />
+                </g>
+            </svg>
+        </div>
+
+        <!-- UI & Story Text Overlays -->
+        <div class="text-container">
+            <div class="scene-text" id="text-1">
+            
+                <div class="scroll-indicator">
+                    <div class="mouse">
+                        <div class="wheel"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="scene-text" id="text-2">
+            </div>
+            <div class="scene-text" id="text-3">
+            </div>
+            <div class="scene-text" id="text-4">
+            </div>
+            <div class="scene-text" id="text-5">
+            </div>
+            <div class="scene-text" id="text-6">
+            </div>
+            <div class="scene-text" id="text-7">
+                <button class="glow-on-hover" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Start Your Stargazing Journey</button>
+            </div>
+        </div>
+
+        <!-- Cinematic Opening Title -->
+        <div class="cinematic-title-wrapper" id="cinematic-title">
+            <div class="cinematic-title-content intro-anim">
+                <h1 class="main-title">Welcome to Nebularis</h1>
+                <p class="subtitle">"Where the night sky becomes a gateway to the universe."</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOREGROUND CONTENT LAYER (Native Scrolling) -->
+    <div class="content-scroll-layer" id="foreground-content">
+        
+        <!-- SEC 1: Welcome (Twilight 15-25%) S=0.20 -->
+        <section class="space-section" style="top: 240vh;">
+            <div class="content-block center">
+                <h2 class="cinematic-heading animate-elem fade-up">Explore the Night Sky</h2>
+                <p class="cinematic-desc animate-elem fade-up delay-100">Each night, the universe reveals a breathtaking display of stars, planets, galaxies, and other celestial phenomena. However, many of these wonders remain unnoticed. This platform is designed to help you discover what is visible in the night sky today, providing guidance to identify celestial objects and learn about them. It transforms stargazing into an informative and engaging experience, making the beauty and knowledge of the cosmos more accessible to everyone.</p>
+                <button class="minimal-btn primary animate-elem fade-up delay-200">Explore Tonight's Sky</button>
+            </div>
+        </section>
+
+        <!-- SEC 2: What's Visible Tonight (Night 30-40%) S=0.35 -->
+        <section class="space-section" style="top: 420vh;">
+            <div class="content-block two-column">
+                <div class="col-left animate-elem slide-left">
+                    <h2 class="section-heading">What's Visible Tonight</h2>
+                    <p class="cinematic-desc">Your guide to current astronomical events.</p>
+                </div>
+                <div class="col-right highlight-list">
+                    <div class="highlight-item animate-elem slide-right delay-100">
+                        <div class="highlight-icon">🌖</div>
+                        <div class="highlight-text">
+                            <h3>Waning Gibbous</h3>
+                            <p>Moon Phase</p>
+                        </div>
+                    </div>
+                    <div class="highlight-item animate-elem slide-right delay-200">
+                        <div class="highlight-icon">🪐</div>
+                        <div class="highlight-text">
+                            <h3>Saturn & Jupiter</h3>
+                            <p>Visible in South</p>
+                        </div>
+                    </div>
+                    <div class="highlight-item animate-elem slide-right delay-300">
+                        <div class="highlight-icon">✨</div>
+                        <div class="highlight-text">
+                            <h3>Orion & Ursa</h3>
+                            <p>Prominent Constellations</p>
+                        </div>
+                    </div>
+                    <div class="highlight-item animate-elem slide-right delay-400">
+                        <div class="highlight-icon">☄️</div>
+                        <div class="highlight-text">
+                            <h3>Perseids</h3>
+                            <p>Upcoming Meteor Shower</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEC 4: Constellations (45-55%) S=0.50 -->
+        <section class="space-section" style="top: 600vh;">
+            <div class="content-block">
+                <h2 class="section-heading animate-elem fade-up">Constellation Guide</h2>
+                <div class="row-list">
+                    <div class="row-item animate-elem fade-up delay-100">
+                        <div class="row-item-left">
+                            <svg viewBox="0 0 100 100"><path d="M20,20 L80,80" stroke="#fff" stroke-width="2"/><circle cx="20" cy="20" r="4" fill="#a4c2f4"/><circle cx="80" cy="80" r="4" fill="#a4c2f4"/></svg>
+                            <div class="row-title">
+                                <h3>Orion</h3>
+                                <p>The Hunter</p>
+                            </div>
+                        </div>
+                        <span class="badge">Winter</span>
+                    </div>
+                    <div class="row-item animate-elem fade-up delay-200">
+                        <div class="row-item-left">
+                            <svg viewBox="0 0 100 100"><path d="M10,80 L30,40 L60,30 L90,10" stroke="#fff" stroke-width="2"/><circle cx="10" cy="80" r="4" fill="#a4c2f4"/><circle cx="30" cy="40" r="4" fill="#a4c2f4"/><circle cx="60" cy="30" r="4" fill="#a4c2f4"/><circle cx="90" cy="10" r="4" fill="#a4c2f4"/></svg>
+                            <div class="row-title">
+                                <h3>Ursa Major</h3>
+                                <p>The Great Bear</p>
+                            </div>
+                        </div>
+                        <span class="badge">All Year</span>
+                    </div>
+                    <div class="row-item animate-elem fade-up delay-300">
+                        <div class="row-item-left">
+                            <svg viewBox="0 0 100 100"><path d="M20,30 L40,80 L60,50 L80,90 M80,20" stroke="#fff" stroke-width="2"/><circle cx="20" cy="30" r="4" fill="#a4c2f4"/><circle cx="40" cy="80" r="4" fill="#a4c2f4"/><circle cx="60" cy="50" r="4" fill="#a4c2f4"/><circle cx="80" cy="90" r="4" fill="#a4c2f4"/></svg>
+                            <div class="row-title">
+                                <h3>Cassiopeia</h3>
+                                <p>The Queen</p>
+                            </div>
+                        </div>
+                        <span class="badge">Autumn</span>
+                    </div>
+                    <div class="row-item animate-elem fade-up delay-400">
+                        <div class="row-item-left">
+                            <svg viewBox="0 0 100 100"><path d="M10,10 L30,20 L50,60 L80,60 L90,80" stroke="#fff" stroke-width="2"/><circle cx="10" cy="10" r="4" fill="#a4c2f4"/><circle cx="30" cy="20" r="4" fill="#a4c2f4"/><circle cx="50" cy="60" r="4" fill="#a4c2f4"/><circle cx="80" cy="60" r="4" fill="#a4c2f4"/><circle cx="90" cy="80" r="4" fill="#a4c2f4"/></svg>
+                            <div class="row-title">
+                                <h3>Scorpius</h3>
+                                <p>The Scorpion</p>
+                            </div>
+                        </div>
+                        <span class="badge">Summer</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEC 3: Space Gallery (Milky Way 60-70%) S=0.65 -->
+        <section class="space-section" style="top: 780vh;">
+            <div class="content-block">
+                <h2 class="section-heading animate-elem fade-up">Gallery of the Cosmos</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-img-wrapper animate-elem fade-up delay-100">
+                        <img src="assets/Tarantula Nebula (30 Doradus).jpeg" alt="Tarantula Nebula" class="gallery-img">
+                    </div>
+                    <div class="gallery-img-wrapper animate-elem fade-up delay-200">
+                        <img src="assets/gallery_nebula_1775244863620.png" alt="Nebula" class="gallery-img">
+                    </div>
+                    <div class="gallery-img-wrapper animate-elem fade-up delay-300">
+                        <img src="assets/Crab Nebula (M1).jpeg" alt="Crab Nebula" class="gallery-img">
+                    </div>
+                    <div class="gallery-img-wrapper animate-elem fade-up delay-400">
+                        <img src="assets/Eagle Nebula – Pillars of Creation.jpeg" alt="Eagle Nebula" class="gallery-img">
+                    </div>
+                    <div class = "gallery-img-wrapper animate-elem fade-up delay-500">
+                        <img src="assets/Centaurus A (NGC 5128).jpeg" alt="Centaurus" class="gallery-img">
+                    </div>
+                    <div class="gallery-img-wrapper animate-elem fade-up delay-600">
+                        <img src="assets/Cassiopeia A.jpeg" alt="Cassiopeia A" class="gallery-img">
+                    </div>                  
+                </div>
+            </div>
+        </section>
+
+        <!-- SEC 5: Tips (Deep Space 75-85%) S=0.80 -->
+        <section class="space-section" style="top: 960vh;">
+            <div class="content-block">
+                <h2 class="section-heading animate-elem fade-up" style="text-align: center;">Tips for Stargazing</h2>
+                <div class="steps-list">
+                    <div class="step-item alternate-left animate-elem slide-left delay-100">
+                        <div class="step-number">1 —</div>
+                        <div class="step-content">
+                            <strong>Find a dark location</strong>
+                            <p>Far from city lights for the best starry views.</p>
+                        </div>
+                    </div>
+                    <div class="step-item alternate-right animate-elem slide-right delay-200">
+                        <div class="step-number">2 —</div>
+                        <div class="step-content">
+                            <strong>Let your eyes adapt</strong>
+                            <p>It takes about 30 minutes for complete dark adaptation.</p>
+                        </div>
+                    </div>
+                    <div class="step-item alternate-left animate-elem slide-left delay-300">
+                        <div class="step-number">3 —</div>
+                        <div class="step-content">
+                            <strong>Use binoculars</strong>
+                            <p>Or a telescope for hunting deep sky objects.</p>
+                        </div>
+                    </div>
+                    <div class="step-item alternate-right animate-elem slide-right delay-400">
+                        <div class="step-number">4 —</div>
+                        <div class="step-content">
+                            <strong>Avoid phones</strong>
+                            <p>Use red light filters if you must use a screen.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEC 6: Invite (Ending 90-100%) S=0.95 -->
+        <section class="space-section" style="top: 1140vh;">
+            <div class="content-block center">
+                <h2 class="cinematic-heading animate-elem fade-up">Look up tonight.</h2>
+                <p class="cinematic-desc animate-elem fade-up delay-100">Join a community of astronomy lovers. Explore events and get updates on celestial phenomena.The universe is closer than you think.</p>
+                <div class="btn-group animate-elem fade-up delay-200">
+                    <button class="minimal-btn primary">Join Stargazing Sessions</button>
+                    <button class="minimal-btn">Learn Astronomy</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+    
+    <script src="content.js?v=2"></script>
+    <script src="script.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,836 @@
+/* Global resets and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: none !important;
+}
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Space Grotesk', sans-serif;
+    color: white;
+    background-color: #000;
+    /* Hide scrollbar for cinematic feel */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+    /* cursor: none; */
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Artificial height container for scrolling */
+.scroll-container {
+    height: 1200vh; /* Extremely long height for slow, cinematic transitions */
+    width: 100%;
+}
+
+/* Fixed cinematic frame */
+.viewport {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #020205;
+}
+
+/* General layer styling */
+.layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    will-change: transform, opacity;
+}
+
+/* Sky layers */
+.sky {
+    opacity: 0;
+    transition: opacity 0.1s linear;
+}
+
+#sky-sunset {
+    background: linear-gradient(to bottom, #446ab5 0%, #b57a66 60%, #e06c3a 100%);
+    opacity: 1; /* Initial state */
+}
+
+#sky-twilight {
+    background: linear-gradient(to bottom, #111a3a 0%, #29386f 60%, #5d4273 100%);
+}
+
+#sky-night {
+    background: linear-gradient(to bottom, #050914 0%, #0d162b 60%, #151f38 100%);
+}
+
+#sky-space {
+    background: radial-gradient(circle at center, #070b1a 0%, #020205 100%);
+}
+
+/* Space Background (Deep space nebula vibes) */
+.space-bg {
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(93, 66, 115, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(41, 56, 111, 0.2) 0%, transparent 40%);
+    opacity: 0;
+}
+
+/* The Sun */
+#sun-layer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Start higher up */
+    transform: translateY(20vh); 
+}
+
+.sun {
+    width: 120px;
+    height: 120px;
+    background: #ffdb85;
+    border-radius: 50%;
+    box-shadow: 0 0 40px #ffdb85, 0 0 100px #ff9e44, 0 0 200px #ff5100;
+}
+
+/* Canvas styling */
+canvas {
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Landscape Mountains */
+.landscape {
+    bottom: -5vh; /* Hide harsh edges if any */
+    top: auto;
+    width: 110%; /* Slight overflow to left/right for safe rotation/scaling */
+    left: -5%;
+}
+
+#mountain-bg {
+    background: linear-gradient(to bottom, #49496e, #2e2e4a);
+    clip-path: polygon(0 60%, 15% 45%, 32% 58%, 51% 35%, 68% 55%, 85% 40%, 100% 55%, 100% 100%, 0 100%);
+    height: 50vh;
+    z-index: 20;
+}
+
+#mountain-mg {
+    background: linear-gradient(to bottom, #2c2940, #161524);
+    clip-path: polygon(0 70%, 20% 55%, 45% 75%, 65% 50%, 80% 65%, 100% 55%, 100% 100%, 0 100%);
+    height: 45vh;
+    z-index: 25;
+}
+
+#mountain-fg {
+    background: #040b16; /* Near black */
+    clip-path: polygon(0 80%, 25% 75%, 55% 85%, 85% 70%, 100% 80%, 100% 100%, 0 100%);
+    height: 35vh;
+    z-index: 30;
+}
+
+/* Stargazer Wrapper */
+.stargazer-wrapper {
+    z-index: 35;
+    bottom: 0;
+    top: auto;
+    height: 35vh;
+    opacity: 0; /* Fade in later */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    transform: translateY(10vh);
+}
+
+.stargazer-wrapper svg {
+    max-height: 100%;
+}
+
+.stargazer-svg {
+    width: 300px;
+}
+
+/* Telescope movement */
+.telescope-svg {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    bottom: 40px;
+    margin-left: 50px; /* Offset to connect with tripod */
+    transform-origin: 50px 50px; /* Pivot around the center where it mounts */
+    transform: rotate(30deg); 
+}
+
+/* Text Overlays - HIDDEN FOR SPACE DISCOVERY PANELS */
+.text-container {
+    display: none !important; /* Forces the old centered text to not show up */
+    position: absolute;
+    z-index: 50;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; /* Let clicks pass through except for buttons */
+}
+
+.scene-text {
+    position: absolute;
+    text-align: center;
+    width: 80%;
+    max-width: 800px;
+    opacity: 0; /* Hidden by default */
+    transform: translateY(30px);
+}
+
+.scene-text h1, .scene-text h2 {
+    font-size: 3.5rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.scene-text p {
+    font-size: 1.8rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: #e2e8f0;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    animation: fadePulse 2s infinite;
+}
+
+.mouse {
+    width: 30px;
+    height: 50px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 15px;
+    margin-top: 15px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.wheel {
+    width: 4px;
+    height: 8px;
+    background-color: white;
+    border-radius: 2px;
+    margin-top: 5px;
+    animation: scrollWheel 1.5s infinite;
+}
+
+/* Modern Glow Button */
+.glow-on-hover {
+    pointer-events: auto; /* Make it clickable */
+    margin-top: 40px;
+    width: 280px;
+    height: 60px;
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #111;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 30px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.glow-on-hover:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 30px;
+}
+
+.glow-on-hover:active {
+    color: #000;
+}
+
+.glow-on-hover:active:after {
+    background: transparent;
+}
+
+.glow-on-hover:hover:before {
+    opacity: 1;
+}
+
+.glow-on-hover:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    left: 0;
+    top: 0;
+    border-radius: 30px;
+    transition: background 0.3s;
+}
+
+.glow-on-hover:hover:after {
+    background: #111a3a;
+}
+
+/* Responsive typography */
+@media (max-width: 768px) {
+    .scene-text h1, .scene-text h2 {
+        font-size: 2.2rem;
+    }
+    .scene-text p {
+        font-size: 1.3rem;
+    }
+}
+
+/* Keyframes */
+@keyframes scrollWheel {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(15px); opacity: 0; }
+}
+
+@keyframes fadePulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}
+
+/* --- SPACE DISCOVERY FOREGROUND ANIMATIONS & LAYOUT --- */
+
+:root {
+    --heading-main: clamp(3.5rem, 8vw, 5rem);
+    --heading-section: clamp(2.5rem, 5vw, 3.5rem);
+    --body-text: clamp(1.1rem, 2vw, 1.25rem);
+}
+
+.content-scroll-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1200vh; /* Exactly matches .scroll-container */
+    z-index: 100;
+    pointer-events: none;
+}
+
+.space-section {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0 5%;
+    pointer-events: auto;
+}
+
+.content-block {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.content-block.center {
+    align-items: center;
+    text-align: center;
+}
+
+/* Animations base class */
+.animate-elem {
+    opacity: 0;
+    will-change: transform, opacity;
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.animate-elem.fade-up {
+    transform: translateY(60px);
+}
+
+.animate-elem.fade-in {
+    transform: translateY(0);
+}
+
+.animate-elem.slide-left {
+    transform: translateX(-80px);
+}
+
+.animate-elem.slide-right {
+    transform: translateX(80px);
+}
+
+.animate-elem.in-view {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+/* Delay utilities */
+.delay-100 { transition-delay: 0.1s; }
+.delay-200 { transition-delay: 0.2s; }
+.delay-300 { transition-delay: 0.3s; }
+.delay-400 { transition-delay: 0.4s; }
+
+/* Cinematic Typo */
+.cinematic-heading {
+    font-size: var(--heading-main);
+    font-weight: 300;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #fff 30%, #a4c2f4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.section-heading {
+    font-size: var(--heading-section);
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    margin-bottom: 40px;
+}
+
+.cinematic-desc {
+    font-size: var(--body-text);
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+/* Minimal Buttons */
+.minimal-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 36px;
+    border-radius: 40px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    font-size: 1rem;
+    font-weight: 400;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    margin-top: 20px;
+}
+
+.minimal-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(164, 194, 244, 0.15);
+}
+
+.minimal-btn.primary {
+    background: rgba(164, 194, 244, 0.1);
+    border-color: rgba(164, 194, 244, 0.5);
+}
+
+.minimal-btn.primary:hover {
+    background: rgba(164, 194, 244, 0.2);
+    box-shadow: 0 10px 40px rgba(164, 194, 244, 0.25);
+}
+
+.btn-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+/* Two Column (Tonight's Sky) */
+.two-column {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 80px;
+    justify-content: space-between;
+}
+
+.col-left {
+    flex: 0 0 35%;
+    min-width: 300px;
+}
+
+.col-right {
+    flex: 1;
+    min-width: 300px;
+}
+
+.highlight-list {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.highlight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 25px;
+}
+
+.highlight-icon {
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+.highlight-text h3 {
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin-bottom: 6px;
+}
+
+.highlight-text p {
+    font-size: 1rem;
+    color: #94a3b8;
+    font-weight: 300;
+}
+
+/* Horizontal Rows (Constellations) */
+.row-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.row-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.row-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.row-item:hover::before {
+    transform: translateX(100%);
+}
+
+.row-item-left {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.row-item-left svg {
+    width: 60px;
+    height: 60px;
+}
+
+.row-title h3 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 4px;
+}
+
+.row-title p {
+    font-size: 1rem;
+    color: #94a3b8;
+}
+
+.badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(164, 194, 244, 0.2);
+    color: #a4c2f4;
+    font-size: 0.9rem;
+    font-weight: 300;
+}
+
+/* Gallery Block */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+}
+
+.gallery-img-wrapper {
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+    position: relative;
+}
+
+.gallery-img-wrapper::after {
+    content:'';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
+    pointer-events: none;
+    border-radius: 12px;
+}
+
+.gallery-img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: block;
+}
+
+.gallery-img-wrapper:hover .gallery-img {
+    transform: scale(1.08);
+}
+
+/* Vertical Steps (Tips) */
+.steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    width: 100%;
+}
+
+.step-item {
+    display: flex;
+    gap: 30px;
+    max-width: 500px;
+}
+
+.step-item.alternate-left {
+    align-self: flex-start;
+    margin-left: 10%;
+}
+
+.step-item.alternate-right {
+    align-self: flex-end;
+    margin-right: 10%;
+}
+
+.step-number {
+    font-size: 1.2rem;
+    color: rgba(164, 194, 244, 0.6);
+    font-weight: 300;
+    padding-top: 4px;
+}
+
+.step-content p {
+    font-size: 1.15rem;
+    color: #94a3b8;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+.step-content strong {
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 400;
+    display: block;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .step-item.alternate-left, .step-item.alternate-right {
+        align-self: flex-start;
+        margin: 0;
+        max-width: 100%;
+    }
+    .row-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    .gallery-img {
+        height: 280px;
+    }
+}
+/*MOBILE FIXES*/
+
+@media (max-width: 768px) {
+
+  .scroll-container,
+  .content-scroll-layer {
+      height: 1400vh;
+  }
+
+  .space-section {
+      padding: 0 8%;
+  }
+
+  .content-block {
+      gap: 25px;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .two-column {
+      flex-direction: column;
+      gap: 40px;
+  }
+
+  .col-left,
+  .col-right {
+      flex: 1 1 100%;
+      min-width: 100%;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .minimal-btn {
+      width: 100%;
+      padding: 14px 20px;
+      font-size: 0.95rem;
+  }
+
+  .btn-group {
+      flex-direction: column;
+      width: 100%;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .gallery-grid {
+      grid-template-columns: 1fr;
+      gap: 25px;
+  }
+
+  .gallery-img {
+      height: 220px;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .cinematic-heading {
+      font-size: 2rem;
+  }
+
+  .section-heading {
+      font-size: 1.7rem;
+  }
+
+  .cinematic-desc {
+      font-size: 1rem;
+      line-height: 1.6;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .step-item {
+      flex-direction: column;
+      gap: 10px;
+  }
+
+}
+/* --- CINEMATIC OPENING TITLE --- */
+.cinematic-title-wrapper {
+    position: absolute;
+    top: 45%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 60;
+    pointer-events: none;
+    width: 90%;
+    max-width: 1200px;
+    will-change: opacity, transform;
+}
+
+.cinematic-title-content {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.intro-anim {
+    animation: titleFadeIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 0.2s;
+}
+
+@keyframes titleFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cinematic-title-wrapper .main-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 400;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--title-color-1, #000000) 40%, var(--title-color-2, #000000) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 15px rgba(255, 213, 176, 0.15));
+}
+
+.cinematic-title-wrapper .subtitle {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    font-weight: 300;
+    color: var(--subtitle-color, #000000);
+    letter-spacing: 2px;
+    font-style: italic;
+    opacity: 0.9;
+}
+
+.spaceship-cursor{
+position:fixed;
+top:0;
+left:0;
+pointer-events:none;
+z-index:9999;
+transform:translate(-50%,-50%);
+transition:transform 0.08s linear;
+}
+
+.spaceship-cursor img{
+width: 25px;
+height:auto;
+display: block;
+}
