@@ -16,6 +16,7 @@ body {
     /* Hide scrollbar for cinematic feel */
     scrollbar-width: none; 
     -ms-overflow-style: none;
+    overflow-x: hidden;;
     /* cursor: none; */
 }
 
@@ -25,7 +26,7 @@ body::-webkit-scrollbar {
 
 /* Artificial height container for scrolling */
 .scroll-container {
-    height: 1200vh; /* Extremely long height for slow, cinematic transitions */
+    height: 1100vh; /* Extremely long height for slow, cinematic transitions */
     width: 100%;
 }
 
@@ -345,7 +346,7 @@ canvas {
     top: 0;
     left: 0;
     width: 100%;
-    height: 1200vh; /* Exactly matches .scroll-container */
+    height: 1100vh; /* Exactly matches .scroll-container */
     z-index: 100;
     pointer-events: none;
 }
@@ -355,7 +356,7 @@ canvas {
     width: 100%;
     display: flex;
     justify-content: center;
-    padding: 0 5%;
+    padding: 20px 5%;
     pointer-events: auto;
 }
 
@@ -681,7 +682,7 @@ canvas {
 }
 /*MOBILE FIXES*/
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
 
   .scroll-container,
   .content-scroll-layer {
@@ -696,7 +697,7 @@ canvas {
       gap: 25px;
   }
 
-}
+} */
 @media (max-width: 768px) {
 
   .two-column {
@@ -833,4 +834,155 @@ transition:transform 0.08s linear;
 width: 25px;
 height:auto;
 display: block;
+}
+@media(max-width: 768px){
+    .landscape{
+        width: 100%;
+        left: 0;
+    }
+}
+@media (max-width:768px){
+
+.two-column{
+    flex-direction: column;
+    gap: 30px;
+}
+
+.col-left,
+.col-right{
+    width: 100%;
+}
+
+.highlight-item{
+    align-items: center;
+}
+
+.highlight-text h3{
+    font-size: 1.1rem;
+}
+
+}
+/* @media (max-width:768px){
+
+.space-section:nth-of-type(1){
+    top:260vh;
+}
+
+.space-section:nth-of-type(2){
+    top:480vh;
+}
+
+.space-section:nth-of-type(3){
+    top:720vh;
+}
+
+.space-section:nth-of-type(4){
+    top:980vh;
+}
+
+.space-section:nth-of-type(5){
+    top:1240vh;
+}
+
+.space-section:nth-of-type(6){
+    top:1500vh;
+}
+
+} */
+@media (max-width:768px){
+
+.step-item{
+flex-direction:column;
+margin:0;
+}
+
+.step-item.alternate-left,
+.step-item.alternate-right{
+align-self:flex-start;
+}
+.step-content strong{
+font-size:1.2rem;
+}
+
+.step-content p{
+font-size:0.95rem;
+}
+
+}
+@media (max-width:768px){
+
+.two-column{
+flex-direction:column;
+gap:30px;
+}
+
+.col-left,
+.col-right{
+min-width:100%;
+}
+
+.gallery-grid{
+grid-template-columns:1fr;
+}
+
+.step-item{
+flex-direction:column;
+margin:0;
+}
+
+.step-item.alternate-left,
+.step-item.alternate-right{
+align-self:flex-start;
+}
+
+}
+@media (max-width:768px){
+
+/* Reduce space after "Explore the Night Sky" */
+.space-section:nth-of-type(2){
+    transform: translateY(-350px);
+}
+
+/* Reduce space after "What's Visible Tonight" */
+.space-section:nth-of-type(3){
+    transform: translateY(-750px);
+}
+/* space between "Constellation guide" and "Gallery of COOSMOS"  */
+.space-section:nth-of-type(4){
+    transform: translateY(-750px);
+}
+/* space between "Galary of COSMOS " and "Tips for Stargazing"   */
+.space-section:nth-of-type(5){
+    transform: translateY(-10px);
+}
+/* space between "Tips for Stargazing" and "Look up tonight" */
+.space-section:nth-of-type(6){
+    transform: translateY(-100px);
+}
+
+}
+@media (max-width:768px){
+
+.two-column{
+display:flex !important;
+flex-direction:column !important;
+gap:30px !important;
+}
+
+.col-left,
+.col-right{
+flex:1 1 auto !important;
+width:100% !important;
+min-width:0 !important;
+}
+
+.highlight-list{
+width:100% !important;
+}
+
+.highlight-item{
+align-items:center !important;
+flex-wrap:wrap !important;
+}
+
 }
